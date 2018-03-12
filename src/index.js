@@ -1,5 +1,5 @@
 // core react library knows how to render React components
-import React from 'react';
+import React, { Component } from 'react';
 // react-dom knows how to render it to the DOM
 import ReactDOM from 'react-dom';
 import YTSearch from 'youtube-api-search';
@@ -8,10 +8,6 @@ import SearchBar from './components/search_bar';
 
 const API_KEY = 'AIzaSyAQ1Sn208S7hes6rPrr666gZ0zKmX6f8D0';
 
-YTSearch({ key: API_KEY, term: 'surfboards' }, function(data) {
-  console.log(data);
-});
-
 // Create a new decodeURIComponent. This component should produce some HTML
 
 /*  const -> ES6 (declaring a variable that's never going to change)
@@ -19,13 +15,26 @@ YTSearch({ key: API_KEY, term: 'surfboards' }, function(data) {
 it is transpiled by Babel into Vanilla JavaScript
 with the fat arrow (=>) the THIS reference is slightly different than if it is a function() {...}
  */
-const App = () => {
-  return (
-    <div>
-      <SearchBar />
-    </div>
-  );
-};
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { videos: [] };
+
+    YTSearch({ key: API_KEY, term: 'drumming' }, videos => {
+      // actually it is this.setState({videos: videos})
+      this.setState({ videos });
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <SearchBar />
+      </div>
+    );
+  }
+}
 
 // Take this component's generated HTML and put it
 // on the page (in the DOM)
